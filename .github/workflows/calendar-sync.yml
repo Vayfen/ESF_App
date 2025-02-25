@@ -2,7 +2,7 @@ name: ESF Calendar Sync
 
 on:
   schedule:
-    - cron: "*/30 * * * *"  # Toutes les 30 minutes
+    - cron: "*/5 * * * *"  # Toutes les 30 minutes
   workflow_dispatch:  # Permet un déclenchement manuel
 
 jobs:
