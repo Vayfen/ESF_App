@@ -92,7 +92,7 @@ def main():
     # 1. Vérifier les différences
     if not compare_files():
         print("Aucun changement détecté")
-        return
+        #return
     
     # 2. Archiver
     archive_path = archive_file()
