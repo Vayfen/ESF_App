@@ -38,6 +38,4 @@ jobs:
       env:
         ESF_USERNAME: ${{ secrets.ESF_USERNAME }}
         ESF_PASSWORD: ${{ secrets.ESF_PASSWORD }}
-        EMAIL_ADDRESS: ${{ secrets.EMAIL_ADDRESS }}
-        EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
       run: python3 main.py
