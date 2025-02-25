@@ -105,7 +105,7 @@ def get_esf_events():
 
         # Extraction des données
         events = response_data.get("body")
-        print("Events data:", events)
+        #print("Events data:", events)
         if events:
             with open("events.json", "w") as f:
                 json.dump(events, f, indent=4)
