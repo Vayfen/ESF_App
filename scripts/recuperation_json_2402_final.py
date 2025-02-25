@@ -119,6 +119,7 @@ def get_esf_events():
 # Exécution
 events = get_esf_events()
 if events:
-    print(json.dumps(events, indent=4))
+    print("il a y a bien eu la recuperation")
+    #print(json.dumps(events, indent=4))
 else:
     print("Échec de la récupération")
