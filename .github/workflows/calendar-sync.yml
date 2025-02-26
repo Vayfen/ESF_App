@@ -7,7 +7,7 @@ on:
 
 jobs:
   sync:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04  # Utiliser une version stable d'Ubuntu
 
     steps:
     - name: Checkout code
@@ -33,6 +33,9 @@ jobs:
         key: ${{ runner.os }}-playwright-${{ hashFiles('**/package-lock.json', '**/yarn.lock') }}
         restore-keys: |
           ${{ runner.os }}-playwright-
+
+    - name: Update package lists
+      run: sudo apt-get update
 
     - name: Install dependencies
       run: |
