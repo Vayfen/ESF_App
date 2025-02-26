@@ -53,3 +53,9 @@ jobs:
       run: |
         pip install -r requirements.txt
         playwright install --with-deps chromium
+
+    - name: Run main script
+      env:
+        ESF_USERNAME: ${{ secrets.ESF_USERNAME }}
+        ESF_PASSWORD: ${{ secrets.ESF_PASSWORD }}
+      run: python3 main.py
