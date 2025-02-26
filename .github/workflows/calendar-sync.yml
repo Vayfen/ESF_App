@@ -2,7 +2,7 @@ name: ESF Calendar Sync
 
 on:
   schedule:
-    - cron: "*/5 * * * *"
+    - cron: "*/10 4-21 * * *"  # 6h-23h locale (UTC+2)
   workflow_dispatch:
 
 jobs:
