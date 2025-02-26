@@ -1,3 +1,10 @@
+name: ESF Calendar Sync
+
+on:
+  schedule:
+    - cron: "*/5 * * * *"
+  workflow_dispatch:
+
 jobs:
   sync:
     runs-on: ubuntu-22.04
@@ -6,8 +13,34 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
+    - name: Cache APT packages
+      uses: actions/cache@v3
+      with:
+        path: /var/cache/apt/archives
+        key: ${{ runner.os }}-apt-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-apt-
+
     - name: Install zstd
       run: sudo apt-get install -y zstd
+      
+    - name: Install system dependencies
+      run: |
+        sudo apt-get update -qq && \
+        sudo apt-get install -y --no-install-recommends \
+          libgtk-3-0 \
+          libnotify4 \
+          libgconf-2-4 \
+          libnss3 \
+          libxss1 \
+          libasound2 \
+          libxtst6 \
+          xvfb
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
 
     - name: Cache pip dependencies
       uses: actions/cache@v3
@@ -18,12 +51,32 @@ jobs:
           ${{ runner.os }}-pip-
       continue-on-error: true
 
-    - name: Set up Python
-      uses: actions/setup-python@v4
+    - name: Cache Playwright browsers
+      uses: actions/cache@v3
       with:
-        python-version: '3.10'
+        path: ~/.cache/ms-playwright
+        key: ${{ runner.os }}-playwright-${{ hashFiles('requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-playwright-
 
     - name: Install dependencies
       run: |
         pip install -r requirements.txt
         playwright install --with-deps chromium
+
+    - name: Create config directory
+      run: mkdir -p config
+
+    - name: Setup Google credentials
+      env:
+        CREDENTIALS_JSON: ${{ secrets.CREDENTIALS_JSON }}
+        TOKEN_JSON: ${{ secrets.TOKEN_JSON }}
+      run: |
+        echo "$CREDENTIALS_JSON" > config/credentials.json
+        echo "$TOKEN_JSON" > config/token.json
+
+    - name: Run main script
+      env:
+        ESF_USERNAME: ${{ secrets.ESF_USERNAME }}
+        ESF_PASSWORD: ${{ secrets.ESF_PASSWORD }}
+      run: python3 main.py
