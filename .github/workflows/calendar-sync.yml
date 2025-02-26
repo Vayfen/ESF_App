@@ -13,6 +13,9 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
+    - name: Install zstd
+      run: sudo apt-get install -y zstd
+      
     - name: Cache APT packages
       uses: actions/cache@v3
       with:
@@ -20,10 +23,8 @@ jobs:
         key: ${{ runner.os }}-apt-${{ hashFiles('**/requirements.txt') }}
         restore-keys: |
           ${{ runner.os }}-apt-
-
-    - name: Install zstd
-      run: sudo apt-get install -y zstd
-      
+      continue-on-error: true  # Ignorer si le cache est corrompu
+            
     - name: Install system dependencies
       run: |
         sudo apt-get update -qq && \
@@ -42,41 +43,13 @@ jobs:
       with:
         python-version: '3.10'
 
-    - name: Cache pip dependencies
-      uses: actions/cache@v3
-      with:
-        path: ~/.cache/pip/
-        key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}-${{ github.run_id }}
-        restore-keys: |
-          ${{ runner.os }}-pip-
-      continue-on-error: true
+    # 4. Forcer la création des dossiers de cache
+    - name: Create cache directories
+      run: |
+        mkdir -p ~/.cache/pip
+        mkdir -p ~/.cache/ms-playwright
 
-    - name: Cache Playwright browsers
-      uses: actions/cache@v3
-      with:
-        path: ~/.cache/ms-playwright
-        key: ${{ runner.os }}-playwright-${{ hashFiles('requirements.txt') }}
-        restore-keys: |
-          ${{ runner.os }}-playwright-
-
-    - name: Install dependencies
+    - name: Install Python dependencies
       run: |
         pip install -r requirements.txt
         playwright install --with-deps chromium
-
-    - name: Create config directory
-      run: mkdir -p config
-
-    - name: Setup Google credentials
-      env:
-        CREDENTIALS_JSON: ${{ secrets.CREDENTIALS_JSON }}
-        TOKEN_JSON: ${{ secrets.TOKEN_JSON }}
-      run: |
-        echo "$CREDENTIALS_JSON" > config/credentials.json
-        echo "$TOKEN_JSON" > config/token.json
-
-    - name: Run main script
-      env:
-        ESF_USERNAME: ${{ secrets.ESF_USERNAME }}
-        ESF_PASSWORD: ${{ secrets.ESF_PASSWORD }}
-      run: python3 main.py
