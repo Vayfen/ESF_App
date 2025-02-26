@@ -2,7 +2,7 @@ name: ESF Calendar Sync
 
 on:
   schedule:
-    - cron: "*/5 * * * *"  # Toutes les 5 minutes
+    - cron: "*/5 * * * *"  # Toutes les 30 minutes
   workflow_dispatch:  # Permet un déclenchement manuel
 
 jobs:
@@ -26,9 +26,18 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-pip-
 
+    - name: Cache Playwright browsers
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/ms-playwright
+        key: ${{ runner.os }}-playwright-${{ hashFiles('**/package-lock.json', '**/yarn.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-playwright-
+
     - name: Install dependencies
       run: |
         pip install -r requirements.txt
+        playwright install-deps
         playwright install chromium
 
     - name: Create config directory
@@ -47,3 +56,4 @@ jobs:
         ESF_USERNAME: ${{ secrets.ESF_USERNAME }}
         ESF_PASSWORD: ${{ secrets.ESF_PASSWORD }}
       run: python3 main.py
+
