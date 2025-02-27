@@ -12,6 +12,12 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
+      
+    - name: Set up environment
+      env:
+       	CALENDAR_ID: ${{ secrets.CALENDAR_ID }}
+      run: |
+      	echo "Calendar ID is $CALENDAR_ID"
 
     - name: Install zstd
       run: sudo apt-get install -y zstd
