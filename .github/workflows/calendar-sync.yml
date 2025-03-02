@@ -66,7 +66,11 @@ jobs:
         mkdir -p config
         echo "$CREDENTIALS_JSON" > config/credentials.json
         echo "$TOKEN_JSON" > config/token.json
+<<<<<<< HEAD
         
+=======
+
+>>>>>>> 08a7b8a8e90d6a7f9091baa65ee08cb68e411e21
     - name: Run main script
       env:
         CALENDAR_ID: ${{ secrets.CALENDAR_ID }}
