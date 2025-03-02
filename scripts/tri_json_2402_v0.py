@@ -26,6 +26,7 @@ result = {
     "Page": data["Page"],
     "Pages": data["Pages"],
     "Total": len(filtered_items),  # Mise à jour du total filtré
+    "ServerTime": data["ServerTime"],  # Ajout de la valeur ServerTime
     "Items": filtered_items
 }
 

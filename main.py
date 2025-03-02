@@ -9,7 +9,7 @@ def main():
     steps = [
         "python3 scripts/recuperation_json_2402_final.py",
         "python3 scripts/tri_json_2402_v0.py",
-        "python3 scripts/import_cal_et_gen_mail_v0.py"
+        "python3 scripts/import_cal_et_gen_mail_v1.py"
     ]
     
     for step in steps:

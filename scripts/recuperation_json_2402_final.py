@@ -40,7 +40,8 @@ def get_esf_events():
                 print("\n--- INTERCEPTION DE LA REQUÊTE POST ---")
 
                 # Construction du payload
-                start_date = datetime(2025, 2, 24, tzinfo=timezone.utc)
+                #start_date = datetime(2025, 2, 24, tzinfo=timezone.utc)
+                start_date = datetime.now(timezone.utc)
                 end_date = datetime(2025, 4, 30, tzinfo=timezone.utc)
                 payload = {
                     "serviceContract": "IPlanningParticulierServicePublic",
