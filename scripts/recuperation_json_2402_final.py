@@ -41,8 +41,8 @@ def get_esf_events():
 
                 # Construction du payload
                 # start_date = datetime(2025, 2, 16, tzinfo=timezone.utc)
-                # start_date = datetime.now(timezone.utc)
-                start_date = datetime(2025, 3, 3, tzinfo=timezone.utc)
+                start_date = datetime.now(timezone.utc)
+                # start_date = datetime(2025, 3, 3, tzinfo=timezone.utc)
                 end_date = datetime(2025, 4, 30, tzinfo=timezone.utc)
                 payload = {
                     "serviceContract": "IPlanningParticulierServicePublic",
