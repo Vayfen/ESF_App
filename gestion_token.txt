@@ -1,0 +1,10 @@
+Il faut télécharger le credentials.json depuis
+https://console.cloud.google.com/auth/clients?inv=1&invt=AbsOpQ&project=chlo-450822
+en prenan tle client de bureau je pense car c'est avec cette modif que ca marche actuellement mais avant j'ai cru que ca marchais avec le client Github mais je ne suis pas sur que ca ait marché en fait.
+Une chose est sure c'est que avec date de départ fixe, cela marche quand je supprime des évènements ils sont bien remis mais à voir si avec date fixe ils ne s'empilent pas lorsqu'il y a réexport car 1 manquant ou 1 nouveau.
+Je n'ai plus les moyens de tester cela.
+Je vais donc repasser la date en à partir de maintenant car logiquement ça ça marchait.
+
+Ensuite avec les credentials.json, il faut utiliser le programme tokenjson.py qui réalise la création de token.json et il faut le coller dans le répertoire config à mon avis. A vérifier mais je pense que le répertoire de sortie du programme python est le répertoire où il travaille. Puis, pour travailler avec le serveur, il faut coller cette valeur de token.json dans
+https://github.com/Corentin-Favre/ESF_Calendar/settings/secrets/actions
+Bon courage Corentin :)
