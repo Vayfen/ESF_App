@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.esf.calendar.ui.screens.calendar.CalendarScreen
 import com.esf.calendar.ui.screens.login.LoginScreen
 
 /**
@@ -38,8 +39,11 @@ fun NavGraph(
         }
 
         composable(Screen.Calendar.route) {
-            // TODO: Implémenter CalendarScreen
-            androidx.compose.material3.Text("Calendrier - À implémenter")
+            CalendarScreen(
+                onNavigateToSettings = {
+                    navController.navigate(Screen.Settings.route)
+                }
+            )
         }
 
         composable(Screen.Settings.route) {
