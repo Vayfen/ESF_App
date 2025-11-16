@@ -146,6 +146,7 @@ fun WebViewLoginScreen(
 ) {
     val context = androidx.compose.ui.platform.LocalContext.current
     val authService = remember { ESFAuthService(context) }
+    var isPageLoading by remember { mutableStateOf(true) }
 
     Column(
         modifier = Modifier
@@ -154,13 +155,23 @@ fun WebViewLoginScreen(
     ) {
         // Instructions
         GlassCard(modifier = Modifier.fillMaxWidth()) {
-            Text(
-                text = "Connectez-vous avec vos identifiants ESF",
-                style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.onSurface,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxWidth()
-            )
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Text(
+                    text = "Connectez-vous avec vos identifiants ESF",
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                if (isPageLoading) {
+                    Spacer(modifier = Modifier.height(8.dp))
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(24.dp),
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                }
+            }
         }
 
         Spacer(modifier = Modifier.height(16.dp))

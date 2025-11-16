@@ -44,26 +44,48 @@ class ESFAuthService(private val context: Context) {
             }
 
             // Détecter la redirection après connexion réussie
+            var authCompleted = false
+
             webView.webViewClient = object : WebViewClient() {
                 override fun onPageFinished(view: WebView?, url: String?) {
                     super.onPageFinished(view, url)
 
-                    // Si on est redirigé vers l'app ESF, la connexion a réussi
-                    if (url?.startsWith(Constants.ESF_BASE_URL) == true &&
-                        url.contains("planning", ignoreCase = true)) {
+                    // Log pour déboguer
+                    android.util.Log.d("ESFAuthService", "Page loaded: $url")
 
-                        // Récupérer les cookies
-                        val cookies = cookieManager.getCookie(Constants.ESF_BASE_URL) ?: ""
+                    // Éviter d'appeler le callback plusieurs fois
+                    if (authCompleted) return
 
-                        if (cookies.isNotEmpty()) {
-                            onAuthSuccess(cookies)
-                        } else {
-                            onAuthError("Échec de la récupération des cookies")
+                    // Détecter la connexion réussie selon plusieurs critères
+                    val isAuthSuccess = url?.let { currentUrl ->
+                        // Méthode 1: URL contient "PlanningParticulier" ou "planning"
+                        currentUrl.contains("PlanningParticulier", ignoreCase = true) ||
+                        currentUrl.contains("/planning", ignoreCase = true) ||
+                        // Méthode 2: URL du domaine ESF (pas identity.w-esf.com)
+                        (currentUrl.contains("w-esf.com") &&
+                         !currentUrl.contains("identity.w-esf.com")) ||
+                        // Méthode 3: Présence de cookies de session
+                        (currentUrl.contains("carnet-rouge-esf.app") &&
+                         cookieManager.getCookie(url)?.contains(".ASPXAUTH") == true)
+                    } ?: false
+
+                    if (isAuthSuccess) {
+                        // Récupérer les cookies de toutes les URLs possibles
+                        val cookiesBase = cookieManager.getCookie(Constants.ESF_BASE_URL) ?: ""
+                        val cookiesCurrent = cookieManager.getCookie(url) ?: ""
+                        val allCookies = "$cookiesBase; $cookiesCurrent"
+
+                        android.util.Log.d("ESFAuthService", "Auth success! Cookies: ${allCookies.take(100)}...")
+
+                        if (allCookies.isNotBlank()) {
+                            authCompleted = true
+                            onAuthSuccess(allCookies)
                         }
                     }
 
                     // Détecter une erreur d'authentification
                     if (url?.contains("error", ignoreCase = true) == true) {
+                        authCompleted = true
                         onAuthError("Identifiants incorrects")
                     }
                 }
