@@ -47,6 +47,16 @@ class ESFAuthService(private val context: Context) {
             var authCompleted = false
 
             webView.webViewClient = object : WebViewClient() {
+                // ⚠️ DÉVELOPPEMENT UNIQUEMENT : Accepter tous les certificats SSL
+                override fun onReceivedSslError(
+                    view: WebView?,
+                    handler: android.webkit.SslErrorHandler?,
+                    error: android.net.http.SslError?
+                ) {
+                    android.util.Log.w("ESFAuthService", "SSL Error ignoré: ${error?.toString()}")
+                    handler?.proceed() // ATTENTION : Ignorer l'erreur SSL
+                }
+
                 override fun onPageFinished(view: WebView?, url: String?) {
                     super.onPageFinished(view, url)
 
