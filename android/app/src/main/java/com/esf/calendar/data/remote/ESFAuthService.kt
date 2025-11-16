@@ -88,30 +88,21 @@ class ESFAuthService(private val context: Context) {
 
                     android.util.Log.d("ESFAuthService", "Has auth cookie: $hasAuthCookie")
 
-                    // NOUVELLE STRATÉGIE: Détecter le succès via le code OAuth dans l'URL
-                    // Après connexion réussie, ESF redirige vers carnet-rouge-esf.app/?code=...
-                    val isRedirectWithCode = url?.contains("carnet-rouge-esf.app/?code=") == true
+                    // DÉTECTION: Après connexion réussie sur esf356.w-esf.com
+                    // On arrive sur PlanningParticulier.aspx avec les cookies de session
+                    val isOnPlanningPage = url?.contains("esf356.w-esf.com/PlanningParticulierSSO/PlanningParticulier.aspx") == true
+                    val isOnESF356 = url?.contains("esf356.w-esf.com") == true &&
+                                     !url.contains("identity.w-esf.com")
 
-                    android.util.Log.d("ESFAuthService", "isRedirectWithCode: $isRedirectWithCode")
+                    android.util.Log.d("ESFAuthService", "isOnPlanningPage: $isOnPlanningPage, isOnESF356: $isOnESF356")
 
-                    if (isRedirectWithCode) {
-                        android.util.Log.d("ESFAuthService", "OAuth success detected via redirect URL!")
-                        android.util.Log.d("ESFAuthService", "All cookies: ${allCookies.take(200)}...")
+                    // Détecter le succès via URL ET cookies
+                    if ((isOnPlanningPage || (isOnESF356 && hasAuthCookie)) && allCookies.isNotBlank()) {
+                        android.util.Log.d("ESFAuthService", "Auth success detected! URL: $url")
+                        android.util.Log.d("ESFAuthService", "All cookies (${allCookies.length} chars): ${allCookies.take(200)}...")
 
-                        // Même si les cookies semblent vides, on les sauvegarde
-                        // L'app web doit gérer l'échange du code contre un token
                         authCompleted = true
                         onAuthSuccess(allCookies)
-                    }
-
-                    // Ancienne méthode de détection (backup)
-                    else if (hasAuthCookie && !url.orEmpty().contains("identity.w-esf.com")) {
-                        android.util.Log.d("ESFAuthService", "Auth success detected via cookies! Cookies: ${allCookies.take(100)}...")
-
-                        if (allCookies.isNotBlank()) {
-                            authCompleted = true
-                            onAuthSuccess(allCookies)
-                        }
                     }
 
                     // Détecter une erreur d'authentification
