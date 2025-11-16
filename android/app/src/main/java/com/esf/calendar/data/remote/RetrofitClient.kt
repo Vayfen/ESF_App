@@ -1,6 +1,7 @@
 package com.esf.calendar.data.remote
 
 import com.esf.calendar.util.Constants
+import com.esf.calendar.util.UnsafeOkHttpClient
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import okhttp3.OkHttpClient
@@ -18,7 +19,9 @@ object RetrofitClient {
         level = HttpLoggingInterceptor.Level.BODY
     }
 
-    private val okHttpClient = OkHttpClient.Builder()
+    // ⚠️ DÉVELOPPEMENT UNIQUEMENT : Utilise un client qui accepte tous les certificats SSL
+    private val okHttpClient = UnsafeOkHttpClient.getUnsafeOkHttpClient()
+        .newBuilder()
         .addInterceptor(loggingInterceptor)
         .connectTimeout(30, TimeUnit.SECONDS)
         .readTimeout(30, TimeUnit.SECONDS)

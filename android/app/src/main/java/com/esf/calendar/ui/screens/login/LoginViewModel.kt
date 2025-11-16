@@ -24,13 +24,19 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
      * Vérifie si l'utilisateur est déjà connecté au démarrage
      */
     init {
+        android.util.Log.d("LoginViewModel", "=== init ===")
         checkLoginStatus()
     }
 
     private fun checkLoginStatus() {
         viewModelScope.launch {
-            if (repository.isLoggedIn()) {
+            val isLoggedIn = repository.isLoggedIn()
+            android.util.Log.d("LoginViewModel", "checkLoginStatus: isLoggedIn=$isLoggedIn")
+            if (isLoggedIn) {
+                android.util.Log.d("LoginViewModel", "Déjà connecté, navigation auto vers calendrier")
                 _uiState.value = LoginUiState.Success
+            } else {
+                android.util.Log.d("LoginViewModel", "Non connecté, affichage écran login")
             }
         }
     }
@@ -39,14 +45,21 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
      * Gère la réussite de l'authentification WebView
      */
     fun onAuthSuccess(cookies: String, moniteurId: String) {
+        android.util.Log.d("LoginViewModel", "=== onAuthSuccess appelé ===")
+        android.util.Log.d("LoginViewModel", "Cookies: ${cookies.take(100)}...")
+        android.util.Log.d("LoginViewModel", "MoniteurId: $moniteurId")
         viewModelScope.launch {
             try {
                 // Sauvegarder les credentials et cookies
+                android.util.Log.d("LoginViewModel", "Sauvegarde cookies...")
                 repository.saveCookies(cookies)
+                android.util.Log.d("LoginViewModel", "Sauvegarde moniteurId...")
                 repository.saveMoniteurId(moniteurId)
 
+                android.util.Log.d("LoginViewModel", "Sauvegarde OK, navigation vers calendrier")
                 _uiState.value = LoginUiState.Success
             } catch (e: Exception) {
+                android.util.Log.e("LoginViewModel", "Erreur sauvegarde", e)
                 _uiState.value = LoginUiState.Error(e.message ?: "Erreur inconnue")
             }
         }
