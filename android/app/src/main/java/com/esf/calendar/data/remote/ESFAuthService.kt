@@ -60,15 +60,16 @@ class ESFAuthService(private val context: Context) {
                     // Éviter d'appeler le callback plusieurs fois
                     if (authCompleted) return
 
-                    // DÉTECTION STRICTE : Uniquement basée sur le cookie de session .ASPXAUTH
-                    // Ce cookie n'existe QUE après une connexion réussie
+                    // DÉTECTION STRICTE : Basée sur le cookie de session ESF
+                    // Le cookie "idsrv-siesf" n'existe QUE après une connexion réussie
                     val allCookiesForUrl = cookieManager.getCookie(url) ?: ""
                     val cookiesBase = cookieManager.getCookie(Constants.ESF_BASE_URL) ?: ""
                     val allCookies = "$allCookiesForUrl; $cookiesBase"
 
-                    // Vérifier la présence du cookie .ASPXAUTH (cookie de session ASP.NET)
-                    val hasAuthCookie = allCookies.contains(".ASPXAUTH", ignoreCase = false) ||
-                                       allCookies.contains("ASPXAUTH", ignoreCase = false)
+                    // Vérifier la présence du cookie de session ESF (Identity Server)
+                    // idsrv-siesf = cookie créé par le serveur d'identité ESF après login
+                    val hasAuthCookie = allCookies.contains("idsrv-siesf", ignoreCase = false) ||
+                                       allCookies.contains("idsrv", ignoreCase = false)
 
                     android.util.Log.d("ESFAuthService", "Has auth cookie: $hasAuthCookie")
 
