@@ -53,9 +53,16 @@ class SecurePreferencesManager(context: Context) {
 
     /**
      * Sauvegarde les cookies de session
+     * Note: Pour l'authentification WebView, on n'a pas besoin de username/password
+     * car l'utilisateur les entre directement dans le navigateur
      */
     fun saveCookies(cookies: String) {
-        encryptedPrefs.edit().putString(KEY_COOKIES, cookies).apply()
+        encryptedPrefs.edit()
+            .putString(KEY_COOKIES, cookies)
+            .putString(KEY_USERNAME, "") // Placeholder pour compatibilité
+            .putString(KEY_PASSWORD, "") // Placeholder pour compatibilité
+            .putBoolean(KEY_IS_LOGGED_IN, true)
+            .apply()
     }
 
     /**
