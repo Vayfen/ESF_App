@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ESF Calendar</string>
+    <string name="widget_name">Emploi du temps ESF</string>
+
+    <!-- Écran de connexion -->
+    <string name="login_title">Connexion ESF</string>
+    <string name="login_subtitle">Connectez-vous à votre compte ESF</string>
+    <string name="login_button">Se connecter</string>
+    <string name="logout_button">Se déconnecter</string>
+
+    <!-- Navigation -->
+    <string name="nav_calendar">Calendrier</string>
+    <string name="nav_settings">Paramètres</string>
+
+    <!-- Calendrier -->
+    <string name="calendar_title">Mon emploi du temps</string>
+    <string name="no_events">Aucun événement</string>
+    <string name="sync_now">Synchroniser</string>
+    <string name="last_sync">Dernière synchro: %1$s</string>
+
+    <!-- Détails événement -->
+    <string name="event_level">Niveau</string>
+    <string name="event_language">Langue</string>
+    <string name="event_students">Élèves</string>
+    <string name="event_notes">Notes</string>
+
+    <!-- Paramètres -->
+    <string name="settings_title">Paramètres</string>
+    <string name="settings_account">Compte</string>
+    <string name="settings_sync">Synchronisation</string>
+    <string name="settings_notifications">Notifications</string>
+    <string name="settings_appearance">Apparence</string>
+
+    <string name="sync_frequency">Fréquence de synchronisation</string>
+    <string name="sync_15min">Toutes les 15 minutes</string>
+    <string name="sync_30min">Toutes les 30 minutes</string>
+    <string name="sync_1hour">Toutes les heures</string>
+    <string name="sync_manual">Manuelle uniquement</string>
+
+    <string name="sync_hours">Heures de synchronisation</string>
+    <string name="sync_hours_desc">De %1$s à %2$s</string>
+
+    <string name="wifi_only">Wi-Fi uniquement</string>
+    <string name="wifi_only_desc">Synchroniser uniquement en Wi-Fi</string>
+
+    <string name="battery_optimization">Optimisation batterie</string>
+    <string name="battery_optimization_desc">Ne pas synchroniser si batterie &lt; 15%%</string>
+
+    <string name="show_google_calendar">Afficher Google Calendar</string>
+    <string name="show_google_calendar_desc">Afficher les événements des autres calendriers</string>
+
+    <string name="enable_notifications">Activer les notifications</string>
+    <string name="enable_notifications_desc">Être notifié des nouveaux événements</string>
+
+    <!-- Notifications -->
+    <string name="notif_channel_sync">Synchronisation</string>
+    <string name="notif_channel_sync_desc">Notifications de synchronisation</string>
+    <string name="notif_channel_events">Nouveaux événements</string>
+    <string name="notif_channel_events_desc">Notifications de nouveaux événements</string>
+
+    <string name="notif_sync_progress">Synchronisation en cours…</string>
+    <string name="notif_sync_success">%1$d nouveaux événements</string>
+    <string name="notif_sync_error">Erreur de synchronisation</string>
+
+    <!-- Erreurs -->
+    <string name="error_network">Erreur réseau</string>
+    <string name="error_auth">Erreur d\'authentification</string>
+    <string name="error_generic">Une erreur est survenue</string>
+
+    <!-- Permissions -->
+    <string name="permission_calendar_title">Accès au calendrier</string>
+    <string name="permission_calendar_desc">Pour afficher vos événements Google Calendar</string>
+    <string name="permission_notifications_title">Notifications</string>
+    <string name="permission_notifications_desc">Pour vous prévenir des nouveaux événements</string>
+    <string name="grant_permission">Autoriser</string>
+    <string name="deny_permission">Refuser</string>
+</resources>
