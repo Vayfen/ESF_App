@@ -72,9 +72,14 @@ class ESFAuthService(private val context: Context) {
 
                     // DÉTECTION STRICTE : Basée sur le cookie de session ESF
                     // Le cookie "idsrv-siesf" n'existe QUE après une connexion réussie
-                    val allCookiesForUrl = cookieManager.getCookie(url) ?: ""
+                    // IMPORTANT: Récupérer les cookies de TOUS les domaines ESF
+                    val cookiesCurrentUrl = cookieManager.getCookie(url) ?: ""
                     val cookiesBase = cookieManager.getCookie(Constants.ESF_BASE_URL) ?: ""
-                    val allCookies = "$allCookiesForUrl; $cookiesBase"
+                    val cookiesIdentity = cookieManager.getCookie("https://identity.w-esf.com") ?: ""
+                    val cookiesCarnetRouge = cookieManager.getCookie("https://carnet-rouge-esf.app") ?: ""
+                    val allCookies = "$cookiesCurrentUrl; $cookiesBase; $cookiesIdentity; $cookiesCarnetRouge"
+
+                    android.util.Log.d("ESFAuthService", "All cookies combined (${allCookies.length} chars): ${allCookies.take(200)}...")
 
                     // Vérifier la présence du cookie de session ESF (Identity Server)
                     // idsrv-siesf = cookie créé par le serveur d'identité ESF après login
@@ -83,15 +88,21 @@ class ESFAuthService(private val context: Context) {
 
                     android.util.Log.d("ESFAuthService", "Has auth cookie: $hasAuthCookie")
 
-                    // Ne déclencher le succès QUE si le cookie de session est présent
-                    // ET qu'on n'est plus sur la page de login (identity.w-esf.com)
-                    if (hasAuthCookie && !url.orEmpty().contains("identity.w-esf.com")) {
-                        android.util.Log.d("ESFAuthService", "Auth success detected! Cookies: ${allCookies.take(100)}...")
+                    // DÉTECTION: Après connexion réussie sur esf356.w-esf.com
+                    // On arrive sur PlanningParticulier.aspx avec les cookies de session
+                    val isOnPlanningPage = url?.contains("esf356.w-esf.com/PlanningParticulierSSO/PlanningParticulier.aspx") == true
+                    val isOnESF356 = url?.contains("esf356.w-esf.com") == true &&
+                                     !url.contains("identity.w-esf.com")
 
-                        if (allCookies.isNotBlank()) {
-                            authCompleted = true
-                            onAuthSuccess(allCookies)
-                        }
+                    android.util.Log.d("ESFAuthService", "isOnPlanningPage: $isOnPlanningPage, isOnESF356: $isOnESF356")
+
+                    // Détecter le succès via URL ET cookies
+                    if ((isOnPlanningPage || (isOnESF356 && hasAuthCookie)) && allCookies.isNotBlank()) {
+                        android.util.Log.d("ESFAuthService", "Auth success detected! URL: $url")
+                        android.util.Log.d("ESFAuthService", "All cookies (${allCookies.length} chars): ${allCookies.take(200)}...")
+
+                        authCompleted = true
+                        onAuthSuccess(allCookies)
                     }
 
                     // Détecter une erreur d'authentification

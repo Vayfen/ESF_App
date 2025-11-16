@@ -5,8 +5,10 @@ package com.esf.calendar.util
  */
 object Constants {
     // URLs
-    const val ESF_BASE_URL = "https://carnet-rouge-esf.app/"
-    const val ESF_LOGIN_URL = "https://identity.w-esf.com/"
+    // IMPORTANT: Utiliser esf356.w-esf.com (pas carnet-rouge-esf.app)
+    // pour compatibilité avec l'API de planning comme dans le script Python
+    const val ESF_BASE_URL = "https://esf356.w-esf.com/"
+    const val ESF_LOGIN_URL = "https://esf356.w-esf.com/PlanningParticulierSSO/PlanningParticulier.aspx"
     const val ESF_API_ENDPOINT = "AjaxProxyService.svc/InvokeMethod"
 
     // API Parameters (valeurs par défaut de ton script Python)
