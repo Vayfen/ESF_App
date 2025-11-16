@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <!-- Configuration pour les domaines ESF -->
+    <domain-config cleartextTrafficPermitted="false">
+        <domain includeSubdomains="true">w-esf.com</domain>
+        <domain includeSubdomains="true">identity.w-esf.com</domain>
+        <domain includeSubdomains="true">esf356.w-esf.com</domain>
+        <!-- Accepter les certificats système + utilisateur -->
+        <trust-anchors>
+            <certificates src="system" />
+            <certificates src="user" />
+        </trust-anchors>
+    </domain-config>
+
+    <!-- Configuration par défaut pour les autres domaines -->
+    <base-config cleartextTrafficPermitted="false">
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
+</network-security-config>

@@ -53,10 +53,14 @@ class CalendarViewModel(application: Application) : AndroidViewModel(application
      * Synchronise les événements depuis l'API
      */
     fun syncEvents() {
+        android.util.Log.d("CalendarViewModel", "=== syncEvents() appelé ===")
         viewModelScope.launch {
+            android.util.Log.d("CalendarViewModel", "Mise à jour état : Loading")
             _syncState.value = Resource.Loading
 
+            android.util.Log.d("CalendarViewModel", "Appel repository.syncEvents()")
             val result = repository.syncEvents()
+            android.util.Log.d("CalendarViewModel", "Résultat reçu: $result")
             _syncState.value = result
         }
     }
