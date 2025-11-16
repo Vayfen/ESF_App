@@ -72,9 +72,14 @@ class ESFAuthService(private val context: Context) {
 
                     // DÉTECTION STRICTE : Basée sur le cookie de session ESF
                     // Le cookie "idsrv-siesf" n'existe QUE après une connexion réussie
-                    val allCookiesForUrl = cookieManager.getCookie(url) ?: ""
+                    // IMPORTANT: Récupérer les cookies de TOUS les domaines ESF
+                    val cookiesCurrentUrl = cookieManager.getCookie(url) ?: ""
                     val cookiesBase = cookieManager.getCookie(Constants.ESF_BASE_URL) ?: ""
-                    val allCookies = "$allCookiesForUrl; $cookiesBase"
+                    val cookiesIdentity = cookieManager.getCookie("https://identity.w-esf.com") ?: ""
+                    val cookiesCarnetRouge = cookieManager.getCookie("https://carnet-rouge-esf.app") ?: ""
+                    val allCookies = "$cookiesCurrentUrl; $cookiesBase; $cookiesIdentity; $cookiesCarnetRouge"
+
+                    android.util.Log.d("ESFAuthService", "All cookies combined (${allCookies.length} chars): ${allCookies.take(200)}...")
 
                     // Vérifier la présence du cookie de session ESF (Identity Server)
                     // idsrv-siesf = cookie créé par le serveur d'identité ESF après login
@@ -83,10 +88,25 @@ class ESFAuthService(private val context: Context) {
 
                     android.util.Log.d("ESFAuthService", "Has auth cookie: $hasAuthCookie")
 
-                    // Ne déclencher le succès QUE si le cookie de session est présent
-                    // ET qu'on n'est plus sur la page de login (identity.w-esf.com)
-                    if (hasAuthCookie && !url.orEmpty().contains("identity.w-esf.com")) {
-                        android.util.Log.d("ESFAuthService", "Auth success detected! Cookies: ${allCookies.take(100)}...")
+                    // NOUVELLE STRATÉGIE: Détecter le succès via le code OAuth dans l'URL
+                    // Après connexion réussie, ESF redirige vers carnet-rouge-esf.app/?code=...
+                    val isRedirectWithCode = url?.contains("carnet-rouge-esf.app/?code=") == true
+
+                    android.util.Log.d("ESFAuthService", "isRedirectWithCode: $isRedirectWithCode")
+
+                    if (isRedirectWithCode) {
+                        android.util.Log.d("ESFAuthService", "OAuth success detected via redirect URL!")
+                        android.util.Log.d("ESFAuthService", "All cookies: ${allCookies.take(200)}...")
+
+                        // Même si les cookies semblent vides, on les sauvegarde
+                        // L'app web doit gérer l'échange du code contre un token
+                        authCompleted = true
+                        onAuthSuccess(allCookies)
+                    }
+
+                    // Ancienne méthode de détection (backup)
+                    else if (hasAuthCookie && !url.orEmpty().contains("identity.w-esf.com")) {
+                        android.util.Log.d("ESFAuthService", "Auth success detected via cookies! Cookies: ${allCookies.take(100)}...")
 
                         if (allCookies.isNotBlank()) {
                             authCompleted = true
