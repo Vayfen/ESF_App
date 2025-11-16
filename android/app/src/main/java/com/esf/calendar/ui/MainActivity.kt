@@ -17,21 +17,29 @@ import com.esf.calendar.ui.theme.ESFCalendarTheme
  */
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
+        android.util.Log.d("MainActivity", "=== onCreate appelé ===")
+
         // Installer le splash screen
         installSplashScreen()
 
         super.onCreate(savedInstanceState)
 
+        android.util.Log.d("MainActivity", "Initialisation UI...")
+
         setContent {
+            android.util.Log.d("MainActivity", "setContent composable")
             ESFCalendarTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
                     val navController = rememberNavController()
+                    android.util.Log.d("MainActivity", "NavController créé, lancement NavGraph")
                     NavGraph(navController = navController)
                 }
             }
         }
+
+        android.util.Log.d("MainActivity", "=== onCreate terminé ===")
     }
 }
