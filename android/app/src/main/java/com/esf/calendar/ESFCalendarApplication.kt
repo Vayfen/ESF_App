@@ -30,8 +30,8 @@ class ESFCalendarApplication : Application(), Configuration.Provider {
     /**
      * Configuration WorkManager
      */
-    override fun getWorkManagerConfiguration() =
-        Configuration.Builder()
+    override val workManagerConfiguration: Configuration
+        get() = Configuration.Builder()
             .setMinimumLoggingLevel(android.util.Log.INFO)
             .build()
 
